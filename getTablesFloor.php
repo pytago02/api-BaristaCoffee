@@ -6,19 +6,19 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include 'db.php';
 
-$sql = "SELECT * FROM tables";
+    $sql = "SELECT DISTINCT floor FROM tables";
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
-    $tables = array();
+    // Đưa dữ liệu vào mảng
+    $menus = array();
     while ($row = $result->fetch_assoc()) {
-        $tables[] = $row;
+        $menus[] = $row;
     }
-    echo json_encode($tables);
+    echo json_encode($menus);  // Trả về dữ liệu dưới dạng JSON
 } else {
-    echo json_encode([]);
+    echo json_encode([]);  // Nếu không có dữ liệu, trả về mảng rỗng
 }
 
 $conn->close();
-
 ?>
