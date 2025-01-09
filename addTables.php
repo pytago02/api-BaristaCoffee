@@ -9,7 +9,7 @@ include 'db.php';
 if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $data = json_decode(file_get_contents("php://input"), true);
 
-    $tagetDir = "upload/";
+    $tagetDir = "upload/qr-code/";
     if (!is_dir($tagetDir)) {
         mkdir($tagetDir, 0777, true);
     }
@@ -19,17 +19,16 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             echo json_encode(["status" => "error", "message" => "Error" . $_FILES["file"]["error"]]);
         } else {
             $tagetFile = $tagetDir . basename($_FILES["file"]["name"]);
-            $category_id = $_POST["category_id"];
             $name = $_POST["name"];
-            $price = $_POST["price"];
-            $description = $_POST["description"];
-            $availability = $_POST["availability"];
+            $floor = $_POST["floor"];
+            $status = 0;
+
             if (move_uploaded_file($_FILES["file"]["tmp_name"], $tagetFile)) {
-                $stmt = $conn->prepare("INSERT INTO menu_items (category_id, name, price, description, availability, img) VALUES (?, ?, ?, ?, ?, ?)");
+                $stmt = $conn->prepare("INSERT INTO tables (name, floor, status, qr_code) VALUES (?, ?, ?, ?)");
                 if (!$stmt) {
                     echo json_encode(["status" => "error", "message" => "Prepare failed: " . $conn->error]);
                 } else {
-                    $stmt->bind_param("isdsis", $category_id, $name, $price, $description, $availability, $tagetFile);
+                    $stmt->bind_param("siis",$name, $floor, $status, $tagetFile);
                     if ($stmt->execute()) {
                         echo json_encode(["status" => "success"]);
                     } else {

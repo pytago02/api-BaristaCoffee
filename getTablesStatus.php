@@ -6,7 +6,8 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include 'db.php';
 
-    $sql = "SELECT DISTINCT status FROM tables";
+$sql = "SELECT DISTINCT status FROM tables ORDER BY status ASC";
+
 $result = $conn->query($sql);
 
 if ($result->num_rows > 0) {
