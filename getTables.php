@@ -10,15 +10,26 @@ include 'db.php';
 $floor = isset($_GET['floor']) ? $_GET['floor'] : -1;
 $status = isset($_GET['status']) ? $_GET['status'] : -1;
 
+// if ($floor != -1 && $status != -1) {
+//     $sql = "SELECT * FROM tables WHERE floor = $floor AND status = $status";
+// } elseif ($floor != -1) {
+//     $sql = "SELECT * FROM tables WHERE floor = $floor";
+// } elseif ($status != -1) {
+//     $sql = "SELECT * FROM tables WHERE status = $status";
+// } else {
+//     $sql = "SELECT * FROM tables";
+// }
+
 if ($floor != -1 && $status != -1) {
-    $sql = "SELECT * FROM tables WHERE floor = $floor AND status = $status";
+    $sql = "SELECT * FROM tables WHERE floor = $floor AND status = $status ORDER BY floor ASC";
 } elseif ($floor != -1) {
-    $sql = "SELECT * FROM tables WHERE floor = $floor";
+    $sql = "SELECT * FROM tables WHERE floor = $floor ORDER BY floor ASC";
 } elseif ($status != -1) {
-    $sql = "SELECT * FROM tables WHERE status = $status";
+    $sql = "SELECT * FROM tables WHERE status = $status ORDER BY floor ASC";
 } else {
-    $sql = "SELECT * FROM tables";
+    $sql = "SELECT * FROM tables ORDER BY floor ASC";
 }
+
 
 
 

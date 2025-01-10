@@ -4,19 +4,16 @@ header("Access-Control-Allow-Origin: *");
 header("Access-Control-Allow-Methods: GET");
 header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers, Authorization, X-Requested-With");
 
-include 'db.php';  // Đảm bảo đã có kết nối cơ sở dữ liệu
+include 'db.php';
 
-// Lấy table_id từ tham số GET
 $table_id = isset($_GET['table_id']) ? (int) $_GET['table_id'] : 0;  // Mặc định là 0 nếu không có
 // echo json_encode([$table_id]);
 
-// Kiểm tra xem table_id có hợp lệ không
 if ($table_id <= 0) {
     echo json_encode(["error" => "Invalid table_id"]);
     exit();
 }
 
-// Câu lệnh SQL để lấy hóa đơn chưa thanh toán
 $sql = "
     SELECT 
         o.order_id, 
@@ -40,26 +37,22 @@ $sql = "
         o.order_id, o.table_id, o.order_status, o.created_at;
 ";
 
-// Sử dụng prepared statement để tránh SQL Injection
 $stmt = $conn->prepare($sql);
-$stmt->bind_param("i", $table_id);  // Liên kết table_id với câu lệnh SQL
+$stmt->bind_param("i", $table_id);
 
 $stmt->execute();
 $result = $stmt->get_result();
 
-// Kiểm tra nếu có dữ liệu
 if ($result->num_rows > 0) {
-    // Đưa dữ liệu vào mảng
     $invoices = array();
     while ($row = $result->fetch_assoc()) {
         $invoices[] = $row;
     }
-    echo json_encode($invoices);  // Trả về dữ liệu dưới dạng JSON
+    echo json_encode($invoices);
 } else {
-    echo json_encode([]);  // Nếu không có hóa đơn chưa thanh toán, trả về mảng rỗng
+    echo json_encode([]);
 }
 
-// Đóng kết nối
 $stmt->close();
 $conn->close();
 ?>

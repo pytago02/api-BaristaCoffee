@@ -6,12 +6,16 @@ header("Access-Control-Allow-Headers: Content-Type, Access-Control-Allow-Headers
 
 include 'db.php';
 
-// Lấy giá trị category_id từ tham số GET
-$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : 0;
+$category_id = isset($_GET['category_id']) ? $_GET['category_id'] : -1;
+$status = isset($_GET['status']) ? $_GET['status'] : -1;
 
-if($category_id != 0){
-    // Lọc theo category_id nếu category_id khác 0
+if($category_id != -1 && $status != -1){
+    $sql = "SELECT * FROM menu_items WHERE category_id = $category_id AND availability = $status";
+} else if($category_id != -1 && $status == -1){
     $sql = "SELECT * FROM menu_items WHERE category_id = $category_id";
+}
+else if($category_id == -1 && $status != -1){
+    $sql = "SELECT * FROM menu_items WHERE availability = $status";
 } else {
     // Nếu không có category_id, lấy tất cả menu items
     $sql = "SELECT * FROM menu_items";
